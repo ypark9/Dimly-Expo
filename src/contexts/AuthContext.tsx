@@ -1,10 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { getCurrentUser } from "aws-amplify/auth";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getCurrentUser } from 'aws-amplify/auth';
 import {
   authService,
   type SignInCredentials,
   type SignUpCredentials,
-} from "../services/auth/authService";
+} from '../services/auth/authService';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -31,12 +31,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkAuthState = async () => {
     try {
-      console.log("Checking auth state...");
+      console.log('Checking auth state...');
       const user = await getCurrentUser();
-      console.log("Current user:", user);
+      console.log('Current user:', user);
       setIsAuthenticated(!!user);
     } catch (err) {
-      console.log("No authenticated user found:", err);
+      console.log('No authenticated user found:', err);
       setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
@@ -50,8 +50,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsAuthenticated(result.isSignedIn);
       return result;
     } catch (err) {
-      console.error("Sign in error in context:", err);
-      setError(err instanceof Error ? err : new Error("Sign in failed"));
+      console.error('Sign in error in context:', err);
+      setError(err instanceof Error ? err : new Error('Sign in failed'));
       throw err;
     }
   };
@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setError(null);
       await authService.signUp(credentials);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error("Sign up failed"));
+      setError(err instanceof Error ? err : new Error('Sign up failed'));
       throw err;
     }
   };
@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setError(null);
       return await authService.confirmSignUp(email, code);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error("Confirmation failed"));
+      setError(err instanceof Error ? err : new Error('Confirmation failed'));
       throw err;
     }
   };
@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await authService.signOut();
       setIsAuthenticated(false);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error("Sign out failed"));
+      setError(err instanceof Error ? err : new Error('Sign out failed'));
       throw err;
     }
   };
@@ -103,7 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 }

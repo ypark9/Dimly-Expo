@@ -4,7 +4,7 @@ import {
   signUp,
   confirmSignUp,
   type SignUpInput,
-} from "aws-amplify/auth";
+} from 'aws-amplify/auth';
 
 export interface SignInCredentials {
   email: string;
@@ -18,24 +18,27 @@ export interface SignUpCredentials extends SignInCredentials {
 class AuthService {
   async signIn({ email, password }: SignInCredentials) {
     try {
-      console.log("Attempting to sign in with:", email);
+      console.log('Attempting to sign in with:', email);
       const { isSignedIn, nextStep } = await signIn({
         username: email,
         password,
+        options: {
+          authFlowType: 'USER_PASSWORD_AUTH',
+        },
       });
-      console.log("Sign in response:", { isSignedIn, nextStep });
+      console.log('Sign in response:', { isSignedIn, nextStep });
 
-      if (nextStep.signInStep !== "DONE") {
-        throw new Error("Additional authentication steps required");
+      if (nextStep.signInStep !== 'DONE') {
+        throw new Error('Additional authentication steps required');
       }
 
       if (!isSignedIn) {
-        throw new Error("Sign in failed");
+        throw new Error('Sign in failed');
       }
 
       return { isSignedIn, nextStep };
     } catch (error) {
-      console.error("Sign in error:", error);
+      console.error('Sign in error:', error);
       throw this.handleError(error);
     }
   }
@@ -85,34 +88,34 @@ class AuthService {
       // Handle specific AWS Cognito error messages
       const errorMessage = error.message;
 
-      if (errorMessage.includes("UserNotConfirmedException")) {
-        return new Error("Please verify your email address");
+      if (errorMessage.includes('UserNotConfirmedException')) {
+        return new Error('Please verify your email address');
       }
-      if (errorMessage.includes("UserNotFoundException")) {
-        return new Error("Account not found. Please check your email");
+      if (errorMessage.includes('UserNotFoundException')) {
+        return new Error('Account not found. Please check your email');
       }
-      if (errorMessage.includes("NotAuthorizedException")) {
-        return new Error("Incorrect email or password");
+      if (errorMessage.includes('NotAuthorizedException')) {
+        return new Error('Incorrect email or password');
       }
-      if (errorMessage.includes("InvalidParameterException")) {
-        return new Error("Please check your input");
+      if (errorMessage.includes('InvalidParameterException')) {
+        return new Error('Please check your input');
       }
-      if (errorMessage.includes("CodeMismatchException")) {
-        return new Error("Invalid verification code");
+      if (errorMessage.includes('CodeMismatchException')) {
+        return new Error('Invalid verification code');
       }
-      if (errorMessage.includes("ExpiredCodeException")) {
-        return new Error("Verification code has expired");
+      if (errorMessage.includes('ExpiredCodeException')) {
+        return new Error('Verification code has expired');
       }
-      if (errorMessage.includes("LimitExceededException")) {
-        return new Error("Too many attempts. Please try again later");
+      if (errorMessage.includes('LimitExceededException')) {
+        return new Error('Too many attempts. Please try again later');
       }
-      if (errorMessage.includes("UsernameExistsException")) {
-        return new Error("An account with this email already exists");
+      if (errorMessage.includes('UsernameExistsException')) {
+        return new Error('An account with this email already exists');
       }
 
       return error;
     }
-    return new Error("An unexpected error occurred. Please try again");
+    return new Error('An unexpected error occurred. Please try again');
   }
 }
 
