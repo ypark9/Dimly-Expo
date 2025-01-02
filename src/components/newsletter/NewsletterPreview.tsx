@@ -27,25 +27,24 @@ export const NewsletterPreview: React.FC<NewsletterPreviewProps> = ({
 
   return (
     <View style={styles.container}>
-      <View style={[styles.header, { paddingTop: Math.max(insets.top, 8) }]}>
-        <View style={styles.headerContent}>
-          <Text style={styles.subject}>{newsletter.subject}</Text>
-          <View style={styles.senderInfo}>
-            <Text style={styles.senderName}>{newsletter.sender.name}</Text>
-            <Text style={styles.date}>
-              {format(new Date(newsletter.receivedAt), 'MMM d, yyyy')}
-            </Text>
-          </View>
+      <View style={[styles.header, { paddingTop: insets.top }]}>
+        <View style={styles.titleRow}>
+          <Text style={styles.subject} numberOfLines={2}>
+            {newsletter.subject}
+          </Text>
+          <Pressable
+            hitSlop={8}
+            style={styles.closeButton}
+            onPress={() => navigation.goBack()}>
+            <MaterialIcons name="close" size={24} color="#fff" />
+          </Pressable>
         </View>
-        <Pressable
-          hitSlop={8}
-          style={[
-            styles.closeButton,
-            { marginTop: Math.max(insets.top - 16, 0) },
-          ]}
-          onPress={() => navigation.goBack()}>
-          <MaterialIcons name="close" size={24} color="#fff" />
-        </Pressable>
+        <View style={styles.senderInfo}>
+          <Text style={styles.senderName}>{newsletter.sender.name}</Text>
+          <Text style={styles.date}>
+            {format(new Date(newsletter.receivedAt), 'MMM d, yyyy')}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.content}>
@@ -100,23 +99,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    backgroundColor: '#000',
     paddingHorizontal: 16,
     paddingBottom: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#333',
   },
-  headerContent: {
-    flex: 1,
-    marginRight: 16,
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+    paddingTop: 8,
   },
   subject: {
+    flex: 1,
     fontSize: 20,
     fontWeight: '700',
     color: '#fff',
-    marginBottom: 8,
+    marginRight: 16,
   },
   senderInfo: {
     flexDirection: 'row',
