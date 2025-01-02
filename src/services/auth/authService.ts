@@ -4,6 +4,8 @@ import {
   signUp,
   confirmSignUp,
   type SignUpInput,
+  resetPassword,
+  confirmResetPassword,
 } from 'aws-amplify/auth';
 
 export interface SignInCredentials {
@@ -83,6 +85,27 @@ class AuthService {
     }
   }
 
+  async resetPassword(email: string) {
+    try {
+      const { nextStep } = await resetPassword({ username: email });
+      return nextStep;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async confirmResetPassword(email: string, code: string, newPassword: string) {
+    try {
+      await confirmResetPassword({
+        username: email,
+        confirmationCode: code,
+        newPassword,
+      });
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
   private handleError(error: unknown): Error {
     if (error instanceof Error) {
       // Handle specific AWS Cognito error messages
@@ -111,6 +134,14 @@ class AuthService {
       }
       if (errorMessage.includes('UsernameExistsException')) {
         return new Error('An account with this email already exists');
+      }
+      if (errorMessage.includes('InvalidPasswordException')) {
+        return new Error(
+          'Password must be at least 8 characters and contain uppercase, lowercase, numbers, and symbols',
+        );
+      }
+      if (errorMessage.includes('CodeDeliveryFailureException')) {
+        return new Error('Failed to send verification code. Please try again');
       }
 
       return error;

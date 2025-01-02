@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   TextInput,
@@ -8,55 +8,55 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
-} from "react-native";
-import { useAuth } from "../../contexts/AuthContext";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { AuthStackParamList } from "../../types/navigation";
+} from 'react-native';
+import { useAuth } from '../../contexts/AuthContext';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '../../types/navigation';
 
-type Props = NativeStackScreenProps<AuthStackParamList, "SignIn">;
+type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 
 export default function SignInScreen({ navigation }: Props) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
 
   const handleSignIn = async () => {
     if (!email || !password) {
-      Alert.alert("Error", "Please fill in all fields");
+      Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
     try {
       setIsLoading(true);
-      console.log("Starting sign in process...");
+      console.log('Starting sign in process...');
       const result = await signIn({ email, password });
-      console.log("Sign in completed:", result);
+      console.log('Sign in completed:', result);
 
       if (!result.isSignedIn) {
         Alert.alert(
-          "Error",
-          "Failed to sign in. Please check your credentials and try again.",
+          'Error',
+          'Failed to sign in. Please check your credentials and try again.',
         );
       }
     } catch (error) {
-      console.error("Sign in error in screen:", error);
-      if (error instanceof Error && error.message.includes("not confirmed")) {
+      console.error('Sign in error in screen:', error);
+      if (error instanceof Error && error.message.includes('not confirmed')) {
         Alert.alert(
-          "Account Not Verified",
-          "Please verify your email address first",
+          'Account Not Verified',
+          'Please verify your email address first',
           [
             {
-              text: "Verify Now",
-              onPress: () => navigation.navigate("ConfirmSignUp", { email }),
+              text: 'Verify Now',
+              onPress: () => navigation.navigate('ConfirmSignUp', { email }),
             },
-            { text: "OK" },
+            { text: 'OK' },
           ],
         );
       } else {
         Alert.alert(
-          "Error",
-          error instanceof Error ? error.message : "Sign in failed",
+          'Error',
+          error instanceof Error ? error.message : 'Sign in failed',
         );
       }
     } finally {
@@ -66,9 +66,8 @@ export default function SignInScreen({ navigation }: Props) {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
       <View style={styles.form}>
         <TextInput
           style={styles.input}
@@ -92,17 +91,22 @@ export default function SignInScreen({ navigation }: Props) {
         <TouchableOpacity
           style={styles.button}
           onPress={handleSignIn}
-          disabled={isLoading}
-        >
+          disabled={isLoading}>
           <Text style={styles.buttonText}>
-            {isLoading ? "Signing in..." : "Sign In"}
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.linkButton}
-          onPress={() => navigation.navigate("SignUp")}
-        >
+          onPress={() => navigation.navigate('SignUp')}
+          disabled={isLoading}>
           <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.linkButton}
+          onPress={() => navigation.navigate('ResetPassword')}
+          disabled={isLoading}>
+          <Text style={styles.linkText}>Forgot Password?</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -112,39 +116,39 @@ export default function SignInScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: '#000',
   },
   form: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     padding: 20,
   },
   input: {
-    backgroundColor: "#1a1a1a",
+    backgroundColor: '#1a1a1a',
     borderRadius: 8,
     padding: 15,
     marginBottom: 15,
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
   },
   button: {
-    backgroundColor: "#007AFF",
+    backgroundColor: '#007AFF',
     padding: 15,
     borderRadius: 8,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 10,
   },
   buttonText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   linkButton: {
     marginTop: 20,
-    alignItems: "center",
+    alignItems: 'center',
   },
   linkText: {
-    color: "#007AFF",
+    color: '#007AFF',
     fontSize: 14,
   },
 });
