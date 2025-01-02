@@ -47,7 +47,7 @@ export const NewsletterPreview: React.FC<NewsletterPreviewProps> = ({
         </View>
       </View>
 
-      <View style={styles.content}>
+      <View style={[styles.content, { paddingBottom: insets.bottom }]}>
         {isLoading && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#fff" />
@@ -66,6 +66,7 @@ export const NewsletterPreview: React.FC<NewsletterPreviewProps> = ({
                       color: #ffffff;
                       background-color: #000000;
                       padding: 16px;
+                      padding-bottom: ${insets.bottom + 16}px;
                       margin: 0;
                       line-height: 1.5;
                     }
