@@ -5,6 +5,7 @@ import MainTabNavigator from './tabs/MainTabNavigator';
 import AuthNavigator from './stacks/AuthNavigator';
 import { useAuth } from '../contexts/AuthContext';
 import { ActivityIndicator, View } from 'react-native';
+import NewsletterPreviewScreen from '../screens/newsletter/NewsletterPreviewScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -29,7 +30,18 @@ export default function RootNavigator() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isAuthenticated ? (
-          <Stack.Screen name="Main" component={MainTabNavigator} />
+          <>
+            <Stack.Screen name="Main" component={MainTabNavigator} />
+            <Stack.Screen
+              name="NewsletterPreview"
+              component={NewsletterPreviewScreen}
+              options={{
+                headerShown: false,
+                presentation: 'modal',
+                animation: 'slide_from_bottom',
+              }}
+            />
+          </>
         ) : (
           <Stack.Screen name="Auth" component={AuthNavigator} />
         )}

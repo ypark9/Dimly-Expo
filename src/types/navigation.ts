@@ -1,8 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Newsletter } from './newsletter';
 
 export type RootStackParamList = {
   Auth: undefined;
   Main: undefined;
+  NewsletterPreview: {
+    newsletter: Newsletter;
+  };
 };
 
 export type AuthStackParamList = {
@@ -25,3 +29,6 @@ export type MainTabParamList = {
 
 export type AuthStackScreenProps<T extends keyof AuthStackParamList> =
   NativeStackScreenProps<AuthStackParamList, T>;
+
+export type RootStackScreenProps<T extends keyof RootStackParamList> =
+  NativeStackScreenProps<RootStackParamList, T>;

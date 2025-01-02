@@ -12,8 +12,12 @@ import {
 import { MockNewsletterService } from '../../services/mocks/mockNewsletterService';
 import { Newsletter } from '../../types/newsletter';
 import { format } from 'date-fns';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackScreenProps } from '../../types/navigation';
 
 export default function FeedScreen() {
+  const navigation =
+    useNavigation<RootStackScreenProps<'NewsletterPreview'>['navigation']>();
   const [newsletters, setNewsletters] = useState<Newsletter[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -45,7 +49,11 @@ export default function FeedScreen() {
   }, []);
 
   const renderNewsletterItem = ({ item }: { item: Newsletter }) => (
-    <Pressable style={styles.card}>
+    <Pressable
+      style={styles.card}
+      onPress={() =>
+        navigation.navigate('NewsletterPreview', { newsletter: item })
+      }>
       <View style={styles.cardHeader}>
         <Text style={styles.subject}>{item.subject}</Text>
         <Text style={styles.date}>
