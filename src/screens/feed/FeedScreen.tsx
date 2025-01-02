@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   senderName: {
-    color: '#fff',
+    color: '#97B1A6',
     fontSize: 16,
     fontWeight: '500',
   },
