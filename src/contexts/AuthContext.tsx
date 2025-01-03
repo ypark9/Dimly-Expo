@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getCurrentUser } from 'aws-amplify/auth';
+import { getCurrentUser, type AuthUser } from 'aws-amplify/auth';
 import {
   authService,
   type SignInCredentials,
@@ -9,6 +9,7 @@ import {
 interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
+  user: AuthUser | null;
   signIn: (
     credentials: SignInCredentials,
   ) => Promise<{ isSignedIn: boolean; nextStep: any }>;
@@ -30,6 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
     checkAuthState();
@@ -38,11 +40,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const checkAuthState = async () => {
     try {
       console.log('Checking auth state...');
-      const user = await getCurrentUser();
-      console.log('Current user:', user);
-      setIsAuthenticated(!!user);
+      const currentUser = await getCurrentUser();
+      console.log('Current user:', currentUser);
+      setUser(currentUser);
+      setIsAuthenticated(!!currentUser);
     } catch (err) {
       console.log('No authenticated user found:', err);
+      setUser(null);
       setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
@@ -126,6 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = {
     isAuthenticated,
     isLoading,
+    user,
     signIn: handleSignIn,
     signUp: handleSignUp,
     confirmSignUp: handleConfirmSignUp,
